@@ -1,0 +1,78 @@
+#
+set COMPDIR1 = ./Work1
+set COMPDIR2 = ./Work2
+
+echo "Running forward simulation on smooth structure"
+echo "This will produce seis2pt5d.outstrains_vertp-example1 and seis2pt5d.outxyz_rec-DR-example1"
+\rm seisstruc.param
+ln -sf seisstruc.paramOLYM2 seisstruc.param
+sed s/"18. 0.08"/"40000. 1.e+6"/ seis2pt5d-spherical.infoOLYM > tmp
+sed s/"48.13 -123.58"/"48.13 -123.57"/ tmp > tmp1
+sed s/"90. -70."/"90. -70."/ tmp1 > seis2pt5d-spherical.info
+
+\rm seis2pt5dsource-spherical.param
+ln -sf seis2pt5dsource-spherical.paramOLYMrun1NEW seis2pt5dsource-spherical.param
+ln -sf topo_EX1 topofile
+\rm $COMPDIR1/rec-j-m1 $COMPDIR1/displ-j-m1 $COMPDIR2/rec-j-m2 $COMPDIR2/displ-j-m2
+
+\rm sporder.out
+seis2pt5d << ! > /dev/null
+1
+!
+
+date > $COMPDIR1/seis2pt5-progress1.txt
+date > $COMPDIR2/seis2pt5-progress2.txt
+
+\cp seisstruc.param $COMPDIR1/.
+\cp seis2pt5d-spherical.info $COMPDIR1/.
+\cp seis2pt5dsource-spherical.param $COMPDIR1/.
+\cp topofile $COMPDIR1/.
+\cp seis2pt5d $COMPDIR1/.
+\cp seisstruc.param $COMPDIR2/.
+\cp seis2pt5d-spherical.info $COMPDIR2/.
+\cp seis2pt5dsource-spherical.param $COMPDIR2/.
+\cp topofile $COMPDIR2/.
+\cp seis2pt5d $COMPDIR2/.
+
+\rm receivers-latlondep.txt
+cp receivers-latlondepOLYM.txt receivers-latlondep.txt
+
+cd $COMPDIR1
+ln -sf ../sporder.out sporder.out
+\cp ../receivers-latlondep.txt receivers-latlondep.txt
+seis2pt5d << ! > /dev/null &
+0
+rec-j-m1
+displ-j-m1
+seis2pt5-progress1.txt
+0. 0.5
+!
+
+cd $COMPDIR2
+ln -sf ../sporder.out sporder.out
+\cp ../receivers-latlondep.txt receivers-latlondep.txt
+seis2pt5d << ! > /dev/null &
+0
+rec-j-m2
+displ-j-m2
+seis2pt5-progress2.txt
+0.5 1.0
+!
+wait
+
+cd ..
+\cat $COMPDIR1/vertp-j $COMPDIR2/vertp-j  > vertp-j
+\cat $COMPDIR1/rec-j-m1 $COMPDIR2/rec-j-m2 > rec-j-m
+\cat $COMPDIR1/displ-j-m1 $COMPDIR2/displ-j-m2 > displ-j-m
+
+seis2pt5d << ! > /dev/null 
+4
+not-needed
+not-needed
+not-needed
+0. 1.0000
+!
+\rm seis2pt5d.outxyz_vertp
+\mv seis2pt5d.outstrains_vertp seis2pt5d.outstrains_vertp-example1
+\mv seis2pt5d.outxyz_rec seis2pt5d.outxyz_rec-DR-example1
+\rm seis2pt5d.outstrains_rec
