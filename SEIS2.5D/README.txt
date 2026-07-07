@@ -13,6 +13,7 @@ The package has two dependencies which must be obtained before installation:
 (2) The OpenBLAS library may be obtained from https://osdn.net/projects/sfnet_openblas/releases/. It should be placed in the subdirectory SEIS2.5D/OpenBLAS-0.3.13
 
 To use this software, please find instructions in DOC/SEIS2.5D-tutorial.docx
+The example in the tutorial is intended to be run on a Linux cluster.
 
 License: This project is in the public domain.
 Disclaimer: This software is preliminary or provisional and is subject to revision.
