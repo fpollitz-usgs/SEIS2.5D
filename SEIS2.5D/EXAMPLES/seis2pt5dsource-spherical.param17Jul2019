@@ -1,0 +1,11 @@
+# max depth, min depth (km), dip(deg.)
+30.02 30.00 90.
+# finite fault with # segments
+1
+# lat,lon(deg.),length(km),strike(deg.),rake(deg.),slip(cm) for each segment
+47.856 -122.042 0.01 0. 180. -1000.
+3.39e-7 -2.94e-7 -4.45e-8 3.23e-8 6.37e-8 -1.23e-7
+# along-strike discretization
+5
+# down-dip discretization
+5
